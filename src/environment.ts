@@ -1,32 +1,34 @@
 import type { IAgentRuntime } from "@elizaos/core";
 import { z } from "zod";
 
-export const polkadotEnvSchema = z.object({
-  POLKADOT_ADDRESS: z.string().min(1, "Polkadot address is required"),
-  POLKADOT_SEED: z.string().min(1, "Polkadot account seed phrase is required"),
+export const varaEnvSchema = z.object({
+  VARA_ADDRESS: z.string().min(1, "Vara address is required"),
+  VARA_SEED: z.string().min(1, "Vara account seed phrase is required"),
 });
 
-export type polkadotConfig = z.infer<typeof polkadotEnvSchema>;
+export type varaConfig = z.infer<typeof varaEnvSchema>;
 
-export async function validatePolkadotConfig(
+export async function validateVaraConfig(
   runtime: IAgentRuntime,
-): Promise<polkadotConfig> {
+): Promise<varaConfig> {
   try {
     const config = {
-      POLKADOT_ADDRESS: runtime.getSetting("POLKADOT_ADDRESS") ||
-        process.env.POLKADOT_ADDRESS,
-      POLKADOT_SEED: runtime.getSetting("POLKADOT_SEED") ||
-        process.env.POLKADOT_SEED,
+      VARA_ADDRESS: runtime.getSetting("VARA_ADDRESS") ||
+        process.env.VARA_ADDRESS,
+      VARA_SEED: runtime.getSetting("VARA_SEED") ||
+        process.env.VARA_SEED,
+      VARA_RPC_URL: runtime.getSetting("VARA_RPC_URL") ||
+        process.env.VARA_RPC_URL,
     };
 
-    return polkadotEnvSchema.parse(config);
+    return varaEnvSchema.parse(config);
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errorMessages = error.errors
         .map((err) => `${err.path.join(".")}: ${err.message}`)
         .join("\n");
       throw new Error(
-        `Polkadot configuration validation failed:\n${errorMessages}`,
+        `Vara configuration validation failed:\n${errorMessages}`,
       );
     }
     throw error;

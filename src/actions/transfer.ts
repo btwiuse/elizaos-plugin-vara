@@ -11,9 +11,9 @@ import {
   ModelClass,
   type State,
 } from "@elizaos/core";
-import { validatePolkadotConfig } from "../environment";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { decodeAddress, encodeAddress, Keyring } from "@polkadot/keyring";
+import { validateVaraConfig } from "../environment";
+import { GearApi, decodeAddress, encodeAddress } from "@gear-js/api";
+import { Keyring } from "@polkadot/keyring";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { BN, hexToU8a, isHex, u8aToHex } from "@polkadot/util";
 import type { ISubmittableResult } from "@polkadot/types/types/extrinsic";
@@ -45,7 +45,7 @@ export const isValidAddress = (address: string): boolean => {
  */
 export const formatNumberToBalance = (
   value: number | string,
-  decimals: number = 18,
+  decimals: number = 12,
 ): BN => {
   const MAX_NUMBER_VALUES = 10;
   const [integerPart, fractionalPart] = value.toString().split(".");
@@ -111,11 +111,11 @@ export function isTransferContent(
 /**
  * This function get the number of decimals from the chain registry.
  *
- * @param {ApiPromise} api the api promise of the chain.
+ * @param {GearApi} api the api promise of the chain.
  *
  * @returns {number} The number of decimals of the chain from the api promise.
  */
-export const getDecimals = (api: ApiPromise): number => {
+export const getDecimals = (api: GearApi): number => {
   return api.registry.chainDecimals[0];
 };
 
@@ -133,31 +133,31 @@ Example response:
 
 {{recentMessages}}
 
-Given the recent messages, extract the following information about the requested Polkadot token transfer:
+Given the recent messages, extract the following information about the requested Vara token transfer:
 - Recipient wallet address
-- Amount of Polkadot to transfer
+- Amount of Vara to transfer
 
 Respond with a JSON markdown block containing only the extracted values.`;
 
 export default {
-  name: "SEND_POLKADOT",
+  name: "SEND_VARA",
   similes: [
-    "TRANSFER_POLKADOT_TOKEN",
+    "TRANSFER_VARA_TOKEN",
     "TRANSFER_TOKEN",
-    "TRANSFER_TOKENS_ON_POLKADOT",
-    "TRANSFER_TOKEN_ON_POLKADOT",
-    "SEND_TOKENS_ON_POLKADOT",
-    "SEND_TOKENS_ON_POLKADOT_NETWORK",
-    "SEND_POLKADOT_ON_POLKADOT_NETWORK",
-    "SEND_POLKADOT_TOKEN_ON_POLKADOT",
-    "PAY_ON_POLKADOT",
+    "TRANSFER_TOKENS_ON_VARA",
+    "TRANSFER_TOKEN_ON_VARA",
+    "SEND_TOKENS_ON_VARA",
+    "SEND_TOKENS_ON_VARA_NETWORK",
+    "SEND_VARA_ON_VARA_NETWORK",
+    "SEND_VARA_TOKEN_ON_VARA",
+    "PAY_ON_VARA",
   ],
   validate: async (runtime: IAgentRuntime, _message: Memory) => {
-    await validatePolkadotConfig(runtime);
+    await validateVaraConfig(runtime);
     return true;
   },
   description:
-    "Transfer Polkadot tokens from the agent's wallet to another address",
+    "Transfer Vara tokens from the agent's wallet to another address",
   handler: async (
     runtime: IAgentRuntime,
     message: Memory,
@@ -165,7 +165,7 @@ export default {
     _options: { [key: string]: unknown },
     callback?: HandlerCallback,
   ): Promise<boolean> => {
-    elizaLogger.log("Starting SEND_POLKADOT handler...");
+    elizaLogger.log("Starting SEND_VARA handler...");
 
     // Initialize or update state
     if (!state) {
@@ -202,11 +202,10 @@ export default {
 
     if (content.amount != null && content.recipient != null) {
       try {
-        const SEED = runtime.getSetting("POLKADOT_SEED")!;
-        const ENDPOINT = runtime.getSetting("POLKADOT_RPC_URL");
+        const SEED = runtime.getSetting("VARA_SEED")!;
+        const ENDPOINT = runtime.getSetting("VARA_RPC_URL");
 
-        const provider = new WsProvider(ENDPOINT);
-        const api = await ApiPromise.create({ provider });
+        const api = await GearApi.create({ providerAddress: ENDPOINT });
         const keyring = getKeyringFromSeed(SEED);
         const options = { nonce: -1 };
         const decimals = getDecimals(api);
@@ -306,21 +305,21 @@ export default {
         user: "{{user1}}",
         content: {
           text:
-            "Send 100 DOT to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK",
+            "Send 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK",
         },
       },
       {
         user: "{{agent}}",
         content: {
-          text: "Sure, I'll send 100 DOT to that address now.",
-          action: "SEND_POLKADOT",
+          text: "Sure, I'll send 1 VARA to that address now.",
+          action: "SEND_VARA",
         },
       },
       {
         user: "{{agent}}",
         content: {
           text:
-            "Successfully sent 100 DOT to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK\nTransaction: 0x748057951ff79cea6de0e13b2ef70a1e9f443e9c83ed90e5601f8b45144a4ed4",
+            "Successfully sent 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK\nTransaction: 0x748057951ff79cea6de0e13b2ef70a1e9f443e9c83ed90e5601f8b45144a4ed4",
         },
       },
     ],
@@ -329,21 +328,21 @@ export default {
         user: "{{user1}}",
         content: {
           text:
-            "Please send 100 DOT tokens to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK",
+            "Please send 1 VARA tokens to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK",
         },
       },
       {
         user: "{{agent}}",
         content: {
-          text: "Of course. Sending 100 DOT to that address now.",
-          action: "SEND_POLKADOT",
+          text: "Of course. Sending 1 VARA to that address now.",
+          action: "SEND_VARA",
         },
       },
       {
         user: "{{agent}}",
         content: {
           text:
-            "Successfully sent 100 DOT to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK\nTransaction: 0x0b9f23e69ea91ba98926744472717960cc7018d35bc3165bdba6ae41670da0f0",
+            "Successfully sent 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK\nTransaction: 0x0b9f23e69ea91ba98926744472717960cc7018d35bc3165bdba6ae41670da0f0",
         },
       },
     ],

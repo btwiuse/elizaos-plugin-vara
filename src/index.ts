@@ -4,13 +4,13 @@ import transfer from "./actions/transfer";
 
 export { transfer };
 
-export const polkadotPlugin: Plugin = {
-  name: "polkadot",
-  description: "Polkadot integration plugin",
+export const varaPlugin: Plugin = {
+  name: "vara",
+  description: "Vara integration plugin",
   providers: [],
   evaluators: [],
   services: [],
   actions: [transfer],
 };
 
-export default polkadotPlugin;
+export default varaPlugin;
