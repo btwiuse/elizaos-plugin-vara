@@ -4,6 +4,7 @@ import { z } from "zod";
 export const varaEnvSchema = z.object({
   VARA_ADDRESS: z.string().min(1, "Vara address is required"),
   VARA_SEED: z.string().min(1, "Vara account seed phrase is required"),
+  VARA_RPC_URL: z.string().min(1, "Vara RPC URL is required"),
 });
 
 export type varaConfig = z.infer<typeof varaEnvSchema>;
