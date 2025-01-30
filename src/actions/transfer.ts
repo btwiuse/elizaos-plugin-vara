@@ -216,7 +216,13 @@ export default {
           content.recipient,
         );
         elizaLogger.log(
-          `Balance before the transfer call: ${oldBalance.data.free.toHuman()}`,
+          `Recipient ${content.recipient} balance before the transfer call: ${oldBalance.data.free.toHuman()}`,
+        );
+        const senderBalance: any = await api.query.system.account(
+          keyring.address,
+        );
+        elizaLogger.log(
+          `Sender ${keyring.address} balance before the transfer call: ${senderBalance.data.free.toHuman()}`,
         );
 
         // Transaction call

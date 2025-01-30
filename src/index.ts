@@ -1,8 +1,8 @@
 import type { Plugin } from "@elizaos/core";
 
-export * from "./actions/transfer";
-
 import transfer from "./actions/transfer";
+
+export { transfer };
 
 export const polkadotPlugin: Plugin = {
   name: "polkadot",
