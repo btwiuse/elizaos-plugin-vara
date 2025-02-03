@@ -1,11 +1,11 @@
 {
   "name": "@elizacn/plugin-vara",
-  "version": "0.0.0-alpha.5",
+  "version": "0.0.0-alpha.6",
   "main": "dist/index.js",
   "type": "module",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@elizaos/core": "0.1.7",
+    "@elizaos/core": "0.1.9",
     "@gear-js/api": "0.41.0",
     "zod-to-json-schema": "3.23.5",
     "zod": "3.23.8",
