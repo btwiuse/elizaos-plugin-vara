@@ -1,18 +1,18 @@
 import {
   type Action,
   type ActionExample,
-  composeContext,
+  composePrompt,
+  composePromptFromState,
   type Content,
   elizaLogger,
-  generateObjectDeprecated,
   type HandlerCallback,
   type IAgentRuntime,
   type Memory,
-  ModelClass,
+  ModelType,
   type State,
 } from "@elizaos/core";
 import { validateVaraConfig } from "../environment";
-import { GearApi, decodeAddress, encodeAddress } from "@gear-js/api";
+import { decodeAddress, encodeAddress, GearApi } from "@gear-js/api";
 import { Keyring } from "@polkadot/keyring";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { BN, hexToU8a, isHex, u8aToHex } from "@polkadot/util";
@@ -169,22 +169,20 @@ export default {
 
     // Initialize or update state
     if (!state) {
-      state = (await runtime.composeState(message)) as State;
+      state = await runtime.composeState(message);
     } else {
-      state = await runtime.updateRecentMessageState(state);
+      await runtime.createMemory(message, "messages");
     }
 
     // Compose transfer context
-    const transferContext = composeContext({
+    const prompt = composePrompt({
       state,
       template: transferTemplate,
     });
 
     // Generate transfer content
-    const content = await generateObjectDeprecated({
-      runtime,
-      context: transferContext,
-      modelClass: ModelClass.SMALL,
+    const content = await runtime.useModel(ModelType.OBJECT_SMALL, {
+      prompt,
     });
 
     // Validate transfer content
@@ -302,21 +300,21 @@ export default {
   examples: [
     [
       {
-        user: "{{user1}}",
+        name: "{{user1}}",
         content: {
           text:
             "Send 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK",
         },
       },
       {
-        user: "{{agent}}",
+        name: "{{agent}}",
         content: {
           text: "Sure, I'll send 1 VARA to that address now.",
-          action: "SEND_VARA",
+          actions: ["SEND_VARA"],
         },
       },
       {
-        user: "{{agent}}",
+        name: "{{agent}}",
         content: {
           text:
             "Successfully sent 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK\nTransaction: 0x748057951ff79cea6de0e13b2ef70a1e9f443e9c83ed90e5601f8b45144a4ed4",
@@ -325,21 +323,21 @@ export default {
     ],
     [
       {
-        user: "{{user1}}",
+        name: "{{user1}}",
         content: {
           text:
             "Please send 1 VARA tokens to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK",
         },
       },
       {
-        user: "{{agent}}",
+        name: "{{agent}}",
         content: {
           text: "Of course. Sending 1 VARA to that address now.",
-          action: "SEND_VARA",
+          actions: ["SEND_VARA"],
         },
       },
       {
-        user: "{{agent}}",
+        name: "{{agent}}",
         content: {
           text:
             "Successfully sent 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK\nTransaction: 0x0b9f23e69ea91ba98926744472717960cc7018d35bc3165bdba6ae41670da0f0",
