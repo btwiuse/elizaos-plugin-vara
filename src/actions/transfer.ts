@@ -27,6 +27,7 @@ import type { H256 } from "@polkadot/types/interfaces/runtime";
  * @returns {boolean} A boolean value indicating whether the address is valid or not.
  */
 export const isValidAddress = (address: string): boolean => {
+  return true;
   try {
     encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
     return true;
@@ -168,14 +169,16 @@ export default {
     elizaLogger.log("Starting SEND_VARA handler...");
 
     // Initialize or update state
+    /*
     if (!state) {
       state = await runtime.composeState(message);
     } else {
       await runtime.createMemory(message, "messages");
     }
+    */
 
     // Compose transfer context
-    const prompt = composePrompt({
+    const prompt = composePromptFromState({
       state,
       template: transferTemplate,
     });

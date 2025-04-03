@@ -1,6 +1,6 @@
-*
-
-!dist/**
-!package.json
-!readme.md
-!tsup.config.ts
+node_modules
+.turbo
+pnpm-lock.yaml
+*.log
+*.lock
+package-lock.json
