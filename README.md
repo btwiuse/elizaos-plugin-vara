@@ -1,4 +1,4 @@
-# @elizaos/plugin-vara - Plugin for Vara
+# @elizacn/plugin-vara - Plugin for Vara
 
 This is a plugin for using Eliza to interact with the Vara network. Defaults
 to the Vara mainnet, but can be customized to use other networks by changing
