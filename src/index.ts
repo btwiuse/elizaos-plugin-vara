@@ -1,6 +1,6 @@
 import type { Plugin } from "@elizaos/core";
 
-import transfer from "./actions/transfer";
+import transfer from "./action/transfer";
 
 export { transfer };
 
