@@ -6,9 +6,12 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "@elizaos/core": "1.0.0-beta.7",
-    "@gear-js/api": "0.41.0",
+    "@gear-js/api": "^0.41.0",
+    "@walletconnect/keyvaluestorage": "^1.1.1",
+    "@walletconnect/sign-client": "^2.19.2",
     "zod-to-json-schema": "3.23.5",
     "zod": "3.23.8",
+    "qrcode-generator": "^1.4.4",
     "@polkadot/keyring": "^13.3.1",
     "@polkadot/util": "^13.3.1",
     "@polkadot/util-crypto": "^13.3.1",
