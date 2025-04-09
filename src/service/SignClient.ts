@@ -28,10 +28,11 @@ export class SignClientService extends Service {
     "This is a SignClient service which is attached to the agent through the starter plugin.";
   public signClient = null;
   public session = null;
-  public chainCAIP = CAIPS.vara;
+  public chainCAIP = CAIPS.tvara;
 
   constructor(protected runtime: IAgentRuntime) {
     super(runtime);
+    this.chainCAIP = runtime.getSetting("CHAIN_CAIP") || CAIPS.tvara;
   }
 
   static async start(runtime: IAgentRuntime) {

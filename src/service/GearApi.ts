@@ -31,7 +31,7 @@ export class GearApiService extends Service {
 
   public async initialize() {
     logger.info(`*** Initializing gear api ***`);
-    const providerAddress = "wss://rpc.vara.network";
+    const providerAddress = runtime.getSetting("VARA_RPC_URL");
     this.api = await GearApi.create({ providerAddress });
     await this.api.isReady;
     logger.info(`*** Initialized gear api ***`);

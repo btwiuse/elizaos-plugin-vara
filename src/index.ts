@@ -1,6 +1,6 @@
 import type { Plugin } from "@elizaos/core";
 
-import AirdropAction from "./action/transfer.ts";
+import AirdropAction from "./action/airdrop.ts";
 import WalletConnectAction from "./action/wallet_connect.ts";
 import SignMessageAction from "./action/sign_message.ts";
 import SignTransferTransactionAction from "./action/sign_transfer_transaction.ts";
