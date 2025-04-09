@@ -120,7 +120,7 @@ export const getDecimals = (api: GearApi): number => {
   return api.registry.chainDecimals[0];
 };
 
-const transferTemplate =
+const airdropTemplate =
   `Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.
 
 
@@ -134,31 +134,21 @@ Example response:
 
 {{recentMessages}}
 
-Given the recent messages, extract the following information about the requested Vara token transfer:
+Given the recent messages, extract the following information about the requested Vara token airdrop:
 - Recipient wallet address
-- Amount of Vara to transfer
+- Amount of Vara to airdrop
 
 Respond with a JSON markdown block containing only the extracted values.`;
 
 export default {
-  name: "SEND_VARA",
-  similes: [
-    "TRANSFER_VARA_TOKEN",
-    "TRANSFER_TOKEN",
-    "TRANSFER_TOKENS_ON_VARA",
-    "TRANSFER_TOKEN_ON_VARA",
-    "SEND_TOKENS_ON_VARA",
-    "SEND_TOKENS_ON_VARA_NETWORK",
-    "SEND_VARA_ON_VARA_NETWORK",
-    "SEND_VARA_TOKEN_ON_VARA",
-    "PAY_ON_VARA",
-  ],
+  name: "AIRDROP_TOKEN",
+  similes: [],
   validate: async (runtime: IAgentRuntime, _message: Memory) => {
     await validateVaraConfig(runtime);
     return true;
   },
   description:
-    "Transfer Vara tokens from the agent's wallet to another address",
+    "Airdrop Vara tokens from the agent's wallet to user specified address",
   handler: async (
     runtime: IAgentRuntime,
     message: Memory,
@@ -166,7 +156,7 @@ export default {
     _options: { [key: string]: unknown },
     callback?: HandlerCallback,
   ): Promise<boolean> => {
-    elizaLogger.log("Starting SEND_VARA handler...");
+    elizaLogger.log("Starting AIRDROP_VARA handler...");
 
     // Initialize or update state
     /*
@@ -177,25 +167,25 @@ export default {
     }
     */
 
-    // Compose transfer context
+    // Compose airdrop context
     const prompt = composePromptFromState({
       state,
-      template: transferTemplate,
+      template: airdropTemplate,
     });
 
-    // Generate transfer content
+    // Generate airdrop content
     const content = await runtime.useModel(ModelType.OBJECT_SMALL, {
       prompt,
     });
 
-    // Validate transfer content
+    // Validate airdrop content
     if (!isTransferContent(content)) {
       console.log(content);
-      console.error("Invalid content for TRANSFER_TOKEN action.");
+      console.error("Invalid content for AIRDROP_TOKEN action.");
       if (callback) {
         callback({
-          text: "Unable to process transfer request. Invalid content provided.",
-          content: { error: "Invalid transfer content" },
+          text: "Unable to process airdrop request. Invalid content provided.",
+          content: { error: "Invalid airdrop content" },
         });
       }
       return false;
@@ -216,13 +206,13 @@ export default {
           content.recipient,
         );
         elizaLogger.log(
-          `Recipient ${content.recipient} balance before the transfer call: ${oldBalance.data.free.toHuman()}`,
+          `Recipient ${content.recipient} balance before the airdrop call: ${oldBalance.data.free.toHuman()}`,
         );
         const senderBalance: any = await api.query.system.account(
           keyring.address,
         );
         elizaLogger.log(
-          `Sender ${keyring.address} balance before the transfer call: ${senderBalance.data.free.toHuman()}`,
+          `Sender ${keyring.address} balance before the airdrop call: ${senderBalance.data.free.toHuman()}`,
         );
 
         // Transaction call
@@ -267,7 +257,7 @@ export default {
           content.recipient,
         );
         elizaLogger.log(
-          `Balance after the transfer call: ${newBalance.data.free.toHuman()}`,
+          `Balance after the airdrop call: ${newBalance.data.free.toHuman()}`,
         );
 
         elizaLogger.success(
@@ -286,10 +276,10 @@ export default {
 
         return true;
       } catch (error) {
-        elizaLogger.error("Error during token transfer:", error);
+        elizaLogger.error("Error during token airdrop:", error);
         if (callback) {
           callback({
-            text: `Error transferring tokens: ${error.message}`,
+            text: `Error airdropping tokens: ${error.message}`,
             content: { error: error.message },
           });
         }
@@ -306,21 +296,21 @@ export default {
         name: "{{user1}}",
         content: {
           text:
-            "Send 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK",
+            "Airdrop 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK",
         },
       },
       {
         name: "{{agent}}",
         content: {
-          text: "Sure, I'll send 1 VARA to that address now.",
-          actions: ["SEND_VARA"],
+          text: "Sure, I'll airdrop 1 VARA to that address now.",
+          actions: ["AIRDROP_TOKEN"],
         },
       },
       {
         name: "{{agent}}",
         content: {
           text:
-            "Successfully sent 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK\nTransaction: 0x748057951ff79cea6de0e13b2ef70a1e9f443e9c83ed90e5601f8b45144a4ed4",
+            "Successfully airdropped 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK\nTransaction: 0x748057951ff79cea6de0e13b2ef70a1e9f443e9c83ed90e5601f8b45144a4ed4",
         },
       },
     ],
@@ -329,21 +319,21 @@ export default {
         name: "{{user1}}",
         content: {
           text:
-            "Please send 1 VARA tokens to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK",
+            "Please airdrop 1 VARA tokens to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK",
         },
       },
       {
         name: "{{agent}}",
         content: {
-          text: "Of course. Sending 1 VARA to that address now.",
-          actions: ["SEND_VARA"],
+          text: "Of course. Airdropping 1 VARA to that address now.",
+          actions: ["AIRDROP_TOKEN"],
         },
       },
       {
         name: "{{agent}}",
         content: {
           text:
-            "Successfully sent 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK\nTransaction: 0x0b9f23e69ea91ba98926744472717960cc7018d35bc3165bdba6ae41670da0f0",
+            "Successfully airdropped 1 VARA to 5GWbvXjefEvXXETtKQH7YBsUaPc379KAQATW1eqeJT26cbsK\nTransaction: 0x0b9f23e69ea91ba98926744472717960cc7018d35bc3165bdba6ae41670da0f0",
         },
       },
     ],
