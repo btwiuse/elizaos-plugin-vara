@@ -38,7 +38,7 @@ export class SignClientService extends Service {
   static async start(runtime: IAgentRuntime) {
     logger.info("*** Starting sign client service ***");
     const service = new SignClientService(runtime);
-    await service.initialize();
+    await service.initialize(runtime);
     return service;
   }
 
@@ -52,7 +52,7 @@ export class SignClientService extends Service {
     service.stop();
   }
 
-  public async initialize() {
+  public async initialize(runtime: IAgentRuntime) {
     logger.info(`*** Initializing sign client ***`);
     this.signClient = await SignClient.init({
       projectId: PROJECT_ID,

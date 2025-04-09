@@ -15,7 +15,7 @@ export class GearApiService extends Service {
   static async start(runtime: IAgentRuntime) {
     logger.info("*** Starting gear api service ***");
     const service = new GearApiService(runtime);
-    await service.initialize();
+    await service.initialize(runtime);
     return service;
   }
 
@@ -29,7 +29,7 @@ export class GearApiService extends Service {
     service.stop();
   }
 
-  public async initialize() {
+  public async initialize(runtime: IAgentRuntime) {
     logger.info(`*** Initializing gear api ***`);
     const providerAddress = runtime.getSetting("VARA_RPC_URL");
     this.api = await GearApi.create({ providerAddress });
