@@ -141,7 +141,7 @@ Given the recent messages, extract the following information about the requested
 Respond with a JSON markdown block containing only the extracted values.`;
 
 export default {
-  name: "AIRDROP_TOKEN",
+  name: "AIRDROP",
   similes: [],
   validate: async (runtime: IAgentRuntime, _message: Memory) => {
     await validateVaraConfig(runtime);
@@ -181,7 +181,7 @@ export default {
     // Validate airdrop content
     if (!isTransferContent(content)) {
       console.log(content);
-      console.error("Invalid content for AIRDROP_TOKEN action.");
+      console.error("Invalid content for AIRDROP action.");
       if (callback) {
         callback({
           text: "Unable to process airdrop request. Invalid content provided.",
@@ -303,7 +303,7 @@ export default {
         name: "{{agent}}",
         content: {
           text: "Sure, I'll airdrop 1 VARA to that address now.",
-          actions: ["AIRDROP_TOKEN"],
+          actions: ["AIRDROP"],
         },
       },
       {
@@ -326,7 +326,7 @@ export default {
         name: "{{agent}}",
         content: {
           text: "Of course. Airdropping 1 VARA to that address now.",
-          actions: ["AIRDROP_TOKEN"],
+          actions: ["AIRDROP"],
         },
       },
       {
