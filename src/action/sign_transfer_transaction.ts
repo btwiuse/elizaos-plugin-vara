@@ -159,6 +159,7 @@ export default {
         if (callback) {
           callback({
             text: `Tx hash: ${txHash.toHex()}`,
+            actions: ["SIGN_TRANSFER_TRANSACTION"],
             content: {},
           });
         }

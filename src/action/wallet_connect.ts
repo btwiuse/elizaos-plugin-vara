@@ -89,7 +89,7 @@ export const WalletConnectAction: Action = {
 
       await callback({
         text: `waiting for approval...\n\n${uri}`,
-        actions: ["REPLY"],
+        actions: ["WALLET_CONNECT"],
         source: message.content.source,
       });
 
@@ -101,7 +101,7 @@ export const WalletConnectAction: Action = {
 
       await callback({
         text: `you are connected as ${JSON.stringify(addresses)}`,
-        actions: ["REPLY"],
+        actions: ["WALLET_CONNECT"],
       });
 
       return responseContent;

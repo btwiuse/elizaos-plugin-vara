@@ -117,7 +117,8 @@ export default {
 
         if (callback) {
           callback({
-            text: `Payload:Signature: ${signature}`,
+            text: `Signature: ${signature}`,
+            actions: ["SIGN_MESSAGE"],
             content: {},
           });
         }
