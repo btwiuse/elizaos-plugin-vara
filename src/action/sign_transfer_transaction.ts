@@ -122,23 +122,34 @@ export default {
 
         const recipient = content.recipient;
 
-        const unsignedTransactionPayload = await createUnsignedTransaction(
+        const {tx, unsignedTransaction} = await createUnsignedTransaction(
           api,
           sender,
           recipient,
           content.amount,
         );
 
+	// send tx withSignedTransaction: false
+        const { signature } = await signClientService
+          .signTransaction(
+            unsignedTransaction,
+            sender,
+          );
+	tx.addSignature(sender, signature, unsignedTransaction);
+	const txHash = await api.rpc.author.submitExtrinsic(tx);
+
+        // send tx withSignedTransaction: true
+        /*
         const { signature, signedTransaction } = await signClientService
           .signTransaction(
-            unsignedTransactionPayload,
+            unsignedTransaction,
             sender,
           );
 
-        // send tx withSignedTransaction: true
         const txHash = await api.rpc.author.submitExtrinsic(
           signedTransaction,
         );
+        */
         console.log("txHash", txHash.toHex());
 
         elizaLogger.success(
@@ -253,5 +264,5 @@ async function createUnsignedTransaction(api, sender, recipient, amount) {
     withSignedTransaction: true,
   };
 
-  return unsignedTransaction;
+  return {tx, unsignedTransaction};
 }
