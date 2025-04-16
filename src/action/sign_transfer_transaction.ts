@@ -94,10 +94,10 @@ export default {
     if (!content.sender) {
       content.sender = signClientService.sessionAccounts()[0].address;
     }
+    console.log(content);
 
     // Validate transfer token content
     if (!isTransferContent(content)) {
-      console.log(content);
       console.error("Invalid content for SIGN_TRANSFER_TRANSACTION action.");
       if (callback) {
         callback({

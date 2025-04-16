@@ -83,10 +83,10 @@ export default {
     const content = await runtime.useModel(ModelType.OBJECT_SMALL, {
       prompt,
     });
+    console.log(content);
 
     // Validate sign message content
     if (!isSignMessageContent(content)) {
-      console.log(content);
       console.error("Invalid content for SIGN_MESSAGE action.");
       if (callback) {
         callback({
