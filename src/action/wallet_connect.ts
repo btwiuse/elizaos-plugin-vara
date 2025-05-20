@@ -15,6 +15,7 @@ import {
 import qrcode from "qrcode-generator";
 import { SignClient } from "@walletconnect/sign-client";
 import { KeyValueStorage } from "@walletconnect/keyvaluestorage";
+import { type SignClientService } from "../service/SignClient.ts";
 
 type ErrorCorrectionLevel = "L" | "M" | "Q" | "H";
 
@@ -45,7 +46,6 @@ export const WalletConnectAction: Action = {
   similes: [],
   description:
     "Responds with a simple wallet connect message for connecting wallet via WalletConnect",
-  suppressInitialMessage: true,
 
   validate: async (
     _runtime: IAgentRuntime,
@@ -66,7 +66,7 @@ export const WalletConnectAction: Action = {
     try {
       logger.info("Handling WALLET_CONNECT action");
 
-      const signClientService = runtime.getService("sign_client");
+      const signClientService : SignClientService = runtime.getService("sign_client");
 
       const { uri, approved } = await signClientService.createNewApprovalUri();
 
@@ -77,10 +77,10 @@ export const WalletConnectAction: Action = {
         actions: ["WALLET_CONNECT"],
         source: message.content.source,
         attachments: [
-          {
-            type: "image",
+          /*{
+            contentType: "image",
             url: generateQRCodeDataURL(uri),
-          },
+          },*/
         ],
       };
 
